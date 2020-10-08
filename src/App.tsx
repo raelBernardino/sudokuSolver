@@ -1,5 +1,5 @@
 import React from 'react';
-import { Board } from './components'
+import { Board, Modal, Solve } from './components'
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -8,12 +8,16 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  flex-direction: column;
 `;
 
 const App = () => {
   return (
     <Container>
       <Board />
+      <Modal />
+      <Solve />
     </Container>
   )
 }

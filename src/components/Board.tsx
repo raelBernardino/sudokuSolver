@@ -1,27 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { boardAtom, modalIsOpenAtom } from '../recoil';
-
-interface BorderProps {
-  index: number;
-}
-
-const Space = styled.div<BorderProps>`
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 32px;
-  border-right: ${p => p.index === 2 || p.index === 5 ? '1px solid black' : ''};
-  &:hover {
-    /* background-color: #F95738; */
-    background-color: #d3d3d3;
-  }
-  `;
+import { boardAtom, modalIsOpenAtom, selectedCellAtom } from '../recoil';
+import { Space, BorderProps } from '../atoms'
 
 const Row = styled.div<BorderProps>`
   display: flex;
@@ -33,16 +14,24 @@ const Container = styled.div`
 `;
 
 export const Board = () => {
-  const [board, setBoard] = useRecoilState(boardAtom);
-  const [modalIsOpen, setModalIsOpen] = useRecoilState(modalIsOpenAtom);
+  const [board,] = useRecoilState(boardAtom);
+  const [, setModalIsOpen] = useRecoilState(modalIsOpenAtom);
+  const [, setSelectedCell] = useRecoilState(selectedCellAtom);
 
-  const openModal = () => setModalIsOpen(!modalIsOpen)
+  const storeCellCordinates = (i: number, j: number) => {
+    setModalIsOpen(true)
+    setSelectedCell({i, j})
+  }
 
-  const displayRow = (i: number) => board[i].map((b, i) => <Space index={i}>{b}</Space>)
+  const displayRow = (row: number) => (
+    board[row].map((b, col: number) => (
+      <Space index={col} onClick={() => storeCellCordinates(row, col)}>{b === 0 ? "-" : b}</Space>
+    ))
+  )
 
   return (
     <Container>
-      {board.map((b, i) => <Row index={i}>{displayRow(i)}</Row>)}
+      {board.map((b, row) => <Row index={row}>{displayRow(row)}</Row>)}
     </Container>
   )
 }
